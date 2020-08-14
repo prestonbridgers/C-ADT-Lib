@@ -10,8 +10,7 @@ int ll_addEnd(List **list, void *filled_data)
 		*list = calloc(1, sizeof(List));
 		(*list)->data = filled_data;
 		(*list)->next = NULL;
-	}
-	else // The case that the list is not empty
+	} else // The case that the list is not empty
 	{
 		List *tail = NULL;
 		ll_tail_get(&tail, *list);
@@ -101,5 +100,43 @@ int ll_add(List **list, void *filled_data)
 		*list = new_tmp;
 	}
 
+	return 0;
+}
+
+int ll_remove(List **list, int(*remove_func)(void *, void *), void *target)
+{
+	printf("In remove . . . \n");
+	List *prev = NULL;
+	List *iter = *list;
+
+	for(;; iter = iter->next)
+	{
+		if(iter == NULL)
+		{
+			printf("Breaking the loop: iter == NULL");
+			break;
+		}
+
+		if (remove_func(iter->data, target) == 0)
+		{
+			// The case that the target is at the beginning
+			if (prev == NULL)
+			{
+				printf("DEBUG: Removing from the beginning\n");
+				List *tmp = *list;
+				*list = (*list)->next;
+				free(tmp->data);
+				free(tmp);
+			}
+			else
+			{
+				printf("DEBUG: Removing from not the beginning\n");
+				prev->next = iter->next;
+				free(iter->data);
+				free(iter);
+			}
+		}
+		prev = iter;
+	}
 	return 0;
 }
