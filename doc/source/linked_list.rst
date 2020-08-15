@@ -19,6 +19,7 @@ The functions below are how you will interface with the code.
 	int ll_addEnd(List **list, void *filled_data);
 	int ll_tail_get(List **tail, List *list);
 	int ll_free(List *list);
+	int ll_remove(List **list, int(*remove_func)(void *, void *), void *target);
 
 Code Example
 ------------
@@ -50,6 +51,7 @@ The following example demonstrates a typical use case including the use of a cal
 	*/
 	PersonRecord* 	pr_create(char *n, int a, int sid);
 	void		pr_print_func(void *pr);
+	int		pr_cmpr_func(void *a, void *b);
 
 	int main(int argc, char **argv)
 	{
@@ -67,6 +69,13 @@ The following example demonstrates a typical use case including the use of a cal
 		ll_addEnd(&pr_list, pr2);
 		ll_add(&pr_list, pr3);
 		ll_addEnd(&pr_list, pr4);
+
+		/*
+		 * Removing pr1 from the list using the
+		 * PersonRecord comparison function we
+		 * created.
+		*/
+		ll_remove(&pr_list, &pr_cmpr_func, pr1);
 
 		/*
 		 * Printing the contents of the list as defined
@@ -102,3 +111,17 @@ The following example demonstrates a typical use case including the use of a cal
 			pr_tmp->name, pr_tmp->student_id, pr_tmp->age);
 	}
 
+	/*
+ 	* Meant to be used as a function pointer to tell the
+ 	* linked list how to compare two PersonRecord structs.
+	*/
+	int pr_cmpr_func(void *a, void *b)
+	{
+		PersonRecord *prA = (PersonRecord*) a;
+		PersonRecord *prB = (PersonRecord*) b;
+	
+		if (prA->student_id == prB->student_id)
+			return 0;
+	
+		return 1;
+	}

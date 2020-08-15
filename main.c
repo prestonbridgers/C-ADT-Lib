@@ -5,9 +5,7 @@
 
 typedef struct{
 	char *name;
-	int age;
-	int student_id;
-}PersonRecord;
+	int age; int student_id; }PersonRecord;
 
 PersonRecord* 	pr_create(char *n, int a, int sid);
 void 			pr_print_func(void *pr);
@@ -32,11 +30,7 @@ int main(int argc, char **argv)
 
 	ll_print(pr_list, &pr_print_func);
 
-	// Begin remove function testing
-	printf("Compare John and Sean: %d\n", pr_cmpr_func(pr1, pr4));
-	printf("Compare John and John: %d\n", pr_cmpr_func(pr1, pr1));
-
-	ll_remove(&pr_list, &pr_cmpr_func, pr2);
+	ll_remove(&pr_list, &pr_cmpr_func, pr4);
 
 	ll_print(pr_list, &pr_print_func);
 
@@ -44,18 +38,6 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-int	pr_cmpr_func(void *a, void *b)
-{
-	PersonRecord *prA = (PersonRecord*) a;
-	PersonRecord *prB = (PersonRecord*) b;
-	
-	printf("Comparing %d and %d . . . \n", prA->student_id, prB->student_id);
-
-	if (prA->student_id == prB->student_id)
-		return 0;
-
-	return 1;
-}
 
 /*
  * Fills a PersonRecord struct and returns it.
@@ -75,7 +57,19 @@ PersonRecord *pr_create(char *n, int a, int sid)
 */
 void pr_print_func(void *pr)
 {
+	printf("In print func\n");
 	PersonRecord *pr_tmp = (PersonRecord *) pr;
 	printf("%s:\n  student ID: %d\n  age: %d\n\n",
 		pr_tmp->name, pr_tmp->student_id, pr_tmp->age);
+}
+
+int	pr_cmpr_func(void *a, void *b)
+{
+	PersonRecord *prA = (PersonRecord*) a;
+	PersonRecord *prB = (PersonRecord*) b;
+
+	if (prA->student_id == prB->student_id)
+		return 0;
+
+	return 1;
 }

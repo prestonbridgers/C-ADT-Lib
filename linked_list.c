@@ -6,8 +6,7 @@ int ll_addEnd(List **list, void *filled_data)
 {
 	// The case that the list is currently empty
 	if (*list == NULL)
-	{
-		*list = calloc(1, sizeof(List));
+	{ *list = calloc(1, sizeof(List));
 		(*list)->data = filled_data;
 		(*list)->next = NULL;
 	} else // The case that the list is not empty
@@ -17,8 +16,7 @@ int ll_addEnd(List **list, void *filled_data)
 
 		List *new_tmp = calloc(1, sizeof(List));
 		new_tmp->data = filled_data;
-		new_tmp->next = NULL;
-		tail->next = new_tmp;
+		new_tmp->next = NULL; tail->next = new_tmp;
 	}
 
 	return 0;
@@ -135,8 +133,13 @@ int ll_remove(List **list, int(*remove_func)(void *, void *), void *target)
 				free(iter->data);
 				free(iter);
 			}
+			break;
 		}
-		prev = iter;
+		else
+		{
+			prev = iter;
+		}
 	}
+
 	return 0;
 }
