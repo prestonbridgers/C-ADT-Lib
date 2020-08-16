@@ -5,7 +5,9 @@
 
 typedef struct{
 	char *name;
-	int age; int student_id; }PersonRecord;
+	int age;
+	int student_id;
+}PersonRecord;
 
 PersonRecord* 	pr_create(char *n, int a, int sid);
 void 			pr_print_func(void *pr);
