@@ -11,3 +11,8 @@ Supported ADTs
 --------------
 
 Singly Linked List
+
+Partially Supported ADTs
+------------------------
+
+Hash Tables
