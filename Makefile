@@ -1,3 +1,3 @@
-default: main.c linked_list.c
-	gcc linked_list.c main.c
+default: main.c hashtable.c
+	gcc hashtable.c main.c
 
