@@ -12,7 +12,7 @@ HashTable *ht_create(uint32_t n)
 	tmp->buckets = calloc(tmp->num_buckets, sizeof(*tmp->buckets));
 }
 
-uint32_t ht_hash(HashTable *ht, char *key)
+uint32_t ht_hash_ascii(HashTable *ht, char *key)
 {
 	uint32_t sum = 0;
 	for (uint32_t i = 0; i < strlen(key); i++)
@@ -22,7 +22,7 @@ uint32_t ht_hash(HashTable *ht, char *key)
 
 uint32_t ht_retrieve(HashTable *ht, char *key)
 {
-	uint32_t index = ht_hash(ht, key);
+	uint32_t index = ht_hash_ascii(ht, key);
 	return ht->buckets[index];
 }
 
@@ -31,7 +31,7 @@ int ht_insert(HashTable **ht, char *key, uint32_t value)
 	if (key == NULL)
 		return 1;
 
-	uint32_t hash_value = ht_hash(*ht, key);
+	uint32_t hash_value = ht_hash_ascii(*ht, key);
 
 	(*ht)->buckets[hash_value] = value;
 
