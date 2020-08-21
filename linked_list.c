@@ -103,7 +103,6 @@ int ll_add(List **list, void *filled_data)
 
 int ll_remove(List **list, int(*remove_func)(void *, void *), void *target)
 {
-	printf("In remove . . . \n");
 	List *prev = NULL;
 	List *iter = *list;
 
@@ -111,7 +110,6 @@ int ll_remove(List **list, int(*remove_func)(void *, void *), void *target)
 	{
 		if(iter == NULL)
 		{
-			printf("Breaking the loop: iter == NULL");
 			break;
 		}
 
@@ -120,7 +118,6 @@ int ll_remove(List **list, int(*remove_func)(void *, void *), void *target)
 			// The case that the target is at the beginning
 			if (prev == NULL)
 			{
-				printf("DEBUG: Removing from the beginning\n");
 				List *tmp = *list;
 				*list = (*list)->next;
 				free(tmp->data);
@@ -128,7 +125,6 @@ int ll_remove(List **list, int(*remove_func)(void *, void *), void *target)
 			}
 			else
 			{
-				printf("DEBUG: Removing from not the beginning\n");
 				prev->next = iter->next;
 				free(iter->data);
 				free(iter);

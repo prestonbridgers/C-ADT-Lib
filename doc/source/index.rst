@@ -11,3 +11,4 @@ C Data Structure Library Docs
 	:caption: Contents:
 
 	linked_list
+	hash_table
