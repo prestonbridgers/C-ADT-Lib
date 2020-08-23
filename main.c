@@ -1,10 +1,15 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "hashtable.h"
 #include "linked_list.h"
 
-void print_func(void *v);
+void print_func(void *v)
+{
+	MyData *tmp = (MyData*) v;
+	printf("Data Entry: %d\n", tmp->data);
+}
 
 int main(void)
 {
@@ -37,24 +42,17 @@ int main(void)
 	ht_insert(&ht, "Jordan", 56);
 	ht_insert(&ht, "Ezekiel", 35);
 
-	for(uint8_t i = 0; i < ht->num_buckets; i++)
-	{
-		printf("Bucket #%d:\n", i);
-		ll_print(ht->buckets[i], &print_func);
-		putc('\n', stdout);
-	}
+	ht_print(ht, &print_func);
 
-	//ht_print(ht);
+	MyData *ret = (MyData *) ht_retrieve(ht, "Curt");
+	printf("\nht_retrieve(\"Curt\") = %d\n", ret->data);
 
-	//printf("ht_retrieve(\"Curt\") = %d\n", ht_retrieve(ht, "Curt"));
-	//printf("ht_retrieve(\"Michael\") = %d\n", ht_retrieve(ht, "Michael"));
-	//printf("ht_retrieve(\"James\") = %d\n", ht_retrieve(ht, "James"));
+	ret = (MyData *) ht_retrieve(ht, "Michael");
+	printf("ht_retrieve(\"Michael\") = %d\n", ret->data);
 
+	ret = (MyData *) ht_retrieve(ht, "James");
+	printf("ht_retrieve(\"James\") = %d\n", ret->data);
+
+	ht_free(ht);
 	return 0;
-}
-
-void print_func(void *v)
-{
-	MyData *tmp = (MyData*) v;
-	printf("Data Entry: %d\n", tmp->data);
 }

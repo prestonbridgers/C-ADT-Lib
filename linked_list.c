@@ -22,6 +22,32 @@ int ll_addEnd(List **list, void *filled_data)
 	return 0;
 }
 
+void *ll_get(List *list, int(*cmpr_func)(void *, void *), void *target)
+{
+	List *prev = NULL;
+	List *iter = list;
+
+	for(;; iter = iter->next)
+	{
+		if(iter == NULL)
+		{
+			break;
+		}
+
+		if (cmpr_func(iter->data, target) == 0)
+		{
+			return iter->data;
+			break;
+		}
+		else
+		{
+			prev = iter;
+		}
+	}
+
+	return 0;
+}
+
 int ll_free(List *list)
 {
 	if (list == NULL)
