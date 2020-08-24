@@ -11,8 +11,9 @@ Supported ADTs
 --------------
 
 Singly Linked List
-
-Partially Supported ADTs
-------------------------
+	- Entirely generic
 
 Hash Tables
+	- Seperate Chaining (Linked List) collision resolution
+	- A simple character folding hash function
+	- Not entirely generic yet (Work in Progress)

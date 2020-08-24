@@ -40,13 +40,28 @@
             
   <div class="section" id="hash-tables">
 <h1>Hash Tables<a class="headerlink" href="#hash-tables" title="Permalink to this headline">¶</a></h1>
-<p>Hash tables are currently partially implemented and is still very much a work in progress.</p>
+<p>The hash table implementation is a very simple one.
+It does collision resolution via seperate chaining with linked lists; it uses the same linked list implementation provided with this library.
+I have only implemented one, very simple character folding hash function.
+I plan on implementing more hash functions and making small interface changes in the future.</p>
 <div class="section" id="header-file">
 <h2>Header File<a class="headerlink" href="#header-file" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">HashTable</span> <span class="o">*</span><span class="nf">ht_create</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">);</span>
-<span class="kt">int</span> <span class="nf">ht_insert</span><span class="p">(</span><span class="n">HashTable</span> <span class="o">**</span><span class="n">ht</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">value</span><span class="p">);</span>
-<span class="kt">int</span> <span class="nf">ht_print</span><span class="p">(</span><span class="n">HashTable</span> <span class="o">*</span><span class="n">ht</span><span class="p">);</span>
-<span class="kt">uint32_t</span> <span class="nf">ht_retrieve</span><span class="p">(</span><span class="n">HashTable</span> <span class="o">*</span><span class="n">ht</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">);</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span>
+<span class="p">{</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">data</span><span class="p">;</span>
+<span class="p">}</span><span class="n">MyData</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">HashTable</span><span class="p">{</span>
+        <span class="kt">uint32_t</span> <span class="n">num_buckets</span><span class="p">;</span>
+        <span class="n">List</span> <span class="o">**</span><span class="n">buckets</span><span class="p">;</span>
+<span class="p">}</span><span class="n">HashTable</span><span class="p">;</span>
+
+<span class="n">HashTable</span> <span class="o">*</span><span class="nf">ht_create</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">);</span>
+<span class="kt">uint32_t</span> <span class="nf">ht_free</span><span class="p">(</span><span class="n">HashTable</span> <span class="o">*</span><span class="n">ht</span><span class="p">);</span>
+<span class="kt">uint32_t</span> <span class="nf">ht_insert</span><span class="p">(</span><span class="n">HashTable</span> <span class="o">**</span><span class="n">ht</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">value</span><span class="p">);</span>
+<span class="kt">uint32_t</span> <span class="nf">ht_print</span><span class="p">(</span><span class="n">HashTable</span> <span class="o">*</span><span class="n">ht</span><span class="p">,</span> <span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">print_func</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">));</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">ht_retrieve</span><span class="p">(</span><span class="n">HashTable</span> <span class="o">*</span><span class="n">ht</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -54,30 +69,55 @@
 <h2>Code Example<a class="headerlink" href="#code-example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;hashtable.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;linked_list.h&quot;</span><span class="cp"></span>
+
+<span class="cm">/*</span>
+<span class="cm"> * This function is mean to be used as a function pointer</span>
+<span class="cm"> *   to the ht_print() function call below. This tells the</span>
+<span class="cm"> *   HashTable how to print the data it is storing.</span>
+<span class="cm">*/</span>
+<span class="kt">void</span> <span class="nf">print_func</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">v</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">MyData</span> <span class="o">*</span><span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyData</span><span class="o">*</span><span class="p">)</span> <span class="n">v</span><span class="p">;</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Data Entry: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">tmp</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+<span class="p">}</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
 <span class="p">{</span>
-        <span class="c1">// Creating the hash table with ht_create</span>
+        <span class="c1">// Creating a HashTable with 10 buckets</span>
         <span class="n">HashTable</span> <span class="o">*</span><span class="n">ht</span> <span class="o">=</span> <span class="n">ht_create</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 
-        <span class="c1">// Inserting (key, value) pairs into the hash table</span>
+        <span class="c1">// Inserting (key, value) pairs into the HashTable</span>
         <span class="n">ht_insert</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Curt&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
         <span class="n">ht_insert</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Michael&quot;</span><span class="p">,</span> <span class="mi">18</span><span class="p">);</span>
         <span class="n">ht_insert</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;James&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+        <span class="n">ht_insert</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Karl&quot;</span><span class="p">,</span> <span class="mi">38</span><span class="p">);</span>
+        <span class="n">ht_insert</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Piper&quot;</span><span class="p">,</span> <span class="mi">48</span><span class="p">);</span>
+        <span class="n">ht_insert</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Jimmy&quot;</span><span class="p">,</span> <span class="mi">39</span><span class="p">);</span>
+        <span class="n">ht_insert</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Jake&quot;</span><span class="p">,</span> <span class="mi">27</span><span class="p">);</span>
 
-        <span class="c1">// Printing the contents of the has table</span>
-        <span class="n">ht_print</span><span class="p">(</span><span class="n">ht</span><span class="p">);</span>
+        <span class="c1">// Printing the HashTable with the print_func defined above</span>
+        <span class="c1">// This is similar to the Linked List implementation of ll_print()</span>
+        <span class="n">ht_print</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">print_func</span><span class="p">);</span>
 
         <span class="cm">/*</span>
-<span class="cm">         * Retrieving values from the hash table with ht_retrieve</span>
-<span class="cm">         * and printing them</span>
+<span class="cm">         * Retrieving data is done by casting the return value of</span>
+<span class="cm">         *   ht_retrieve() to the datatype you are storing.</span>
 <span class="cm">        */</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ht_retrieve(</span><span class="se">\&quot;</span><span class="s">Curt</span><span class="se">\&quot;</span><span class="s">) = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ht_retrieve</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Curt&quot;</span><span class="p">));</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ht_retrieve(</span><span class="se">\&quot;</span><span class="s">Michael</span><span class="se">\&quot;</span><span class="s">) = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ht_retrieve</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Michael&quot;</span><span class="p">));</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ht_retrieve(</span><span class="se">\&quot;</span><span class="s">James</span><span class="se">\&quot;</span><span class="s">) = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ht_retrieve</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;James&quot;</span><span class="p">));</span>
+        <span class="n">MyData</span> <span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyData</span> <span class="o">*</span><span class="p">)</span> <span class="n">ht_retrieve</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Curt&quot;</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">ht_retrieve(</span><span class="se">\&quot;</span><span class="s">Curt</span><span class="se">\&quot;</span><span class="s">) = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ret</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
 
+        <span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyData</span> <span class="o">*</span><span class="p">)</span> <span class="n">ht_retrieve</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;Michael&quot;</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ht_retrieve(</span><span class="se">\&quot;</span><span class="s">Michael</span><span class="se">\&quot;</span><span class="s">) = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ret</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyData</span> <span class="o">*</span><span class="p">)</span> <span class="n">ht_retrieve</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="s">&quot;James&quot;</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;ht_retrieve(</span><span class="se">\&quot;</span><span class="s">James</span><span class="se">\&quot;</span><span class="s">) = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ret</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+
+        <span class="c1">// Freeing all memory associated with the HashTable</span>
+        <span class="n">ht_free</span><span class="p">(</span><span class="n">ht</span><span class="p">);</span>
         <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
