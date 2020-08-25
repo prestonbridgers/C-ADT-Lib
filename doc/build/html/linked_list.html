@@ -18,6 +18,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Hash Tables" href="hash_table.html" />
     <link rel="prev" title="C Data Structure Library Docs" href="index.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -26,6 +27,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="hash_table.html" title="Hash Tables"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="C Data Structure Library Docs"
              accesskey="P">previous</a> |</li>
@@ -54,6 +58,7 @@ The functions below are how you will interface with the code.</p>
 <span class="kt">int</span> <span class="nf">ll_tail_get</span><span class="p">(</span><span class="n">List</span> <span class="o">**</span><span class="n">tail</span><span class="p">,</span> <span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">);</span>
 <span class="kt">int</span> <span class="nf">ll_free</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">);</span>
 <span class="kt">int</span> <span class="nf">ll_remove</span><span class="p">(</span><span class="n">List</span> <span class="o">**</span><span class="n">list</span><span class="p">,</span> <span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="n">remove_func</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">),</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">);</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">ll_get</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="n">cmpr_func</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">),</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -114,6 +119,14 @@ The functions below are how you will interface with the code.</p>
 <span class="cm">         * by our pr_print_func</span>
 <span class="cm">        */</span>
         <span class="n">ll_print</span><span class="p">(</span><span class="n">pr_list</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pr_print_func</span><span class="p">);</span>
+
+        <span class="c1">// Creating a target to search for and get from the list.</span>
+        <span class="n">PersonRecord</span> <span class="n">target</span> <span class="o">=</span> <span class="p">(</span><span class="n">PersonRecord</span><span class="p">)</span> <span class="p">{</span><span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+        <span class="n">target</span><span class="p">.</span><span class="n">student_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+        <span class="c1">// Searching/getting the target created above from the list.</span>
+        <span class="n">PersonRecord</span> <span class="o">*</span><span class="n">pr</span> <span class="o">=</span> <span class="p">(</span><span class="n">PersonRecord</span> <span class="o">*</span><span class="p">)</span> <span class="n">ll_get</span><span class="p">(</span><span class="n">pr_list</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pr_cmpr_func</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">target</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Getting pr2 from the list: %s, %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pr</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">pr</span><span class="o">-&gt;</span><span class="n">age</span><span class="p">);</span>
 
         <span class="c1">// Freeing all memory associated with the list</span>
         <span class="n">ll_free</span><span class="p">(</span><span class="n">pr_list</span><span class="p">);</span>
@@ -180,6 +193,9 @@ The functions below are how you will interface with the code.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">C Data Structure Library Docs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="hash_table.html"
+                        title="next chapter">Hash Tables</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -209,6 +225,9 @@ The functions below are how you will interface with the code.</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="hash_table.html" title="Hash Tables"
+             >next</a> |</li>
         <li class="right" >
           <a href="index.html" title="C Data Structure Library Docs"
              >previous</a> |</li>

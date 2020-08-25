@@ -20,6 +20,7 @@ The functions below are how you will interface with the code.
 	int ll_tail_get(List **tail, List *list);
 	int ll_free(List *list);
 	int ll_remove(List **list, int(*remove_func)(void *, void *), void *target);
+	void *ll_get(List *list, int(*cmpr_func)(void *, void *), void *target);
 
 Code Example
 ------------
@@ -82,6 +83,14 @@ The following example demonstrates a typical use case including the use of a cal
 		 * by our pr_print_func
 		*/
 		ll_print(pr_list, &pr_print_func);
+
+		// Creating a target to search for and get from the list.
+		PersonRecord target = (PersonRecord) {NULL, 0, 0};
+		target.student_id = 1;
+
+		// Searching/getting the target created above from the list.
+		PersonRecord *pr = (PersonRecord *) ll_get(pr_list, &pr_cmpr_func, &target);
+		printf("Getting pr2 from the list: %s, %d\n", pr->name, pr->age);
 
 		// Freeing all memory associated with the list
 		ll_free(pr_list);
