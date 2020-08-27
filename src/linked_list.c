@@ -100,15 +100,10 @@ int ll_tail_get(List **tail, List *list)
 int ll_print(List *list, void(*print_func)(void *))
 {
 	if (list == NULL)
-	{
-		fprintf(stderr, "in people_print: list is null, returning\n");
-		return 1;
-	}
+		return 0;
 
-	for (List *iterator = list; iterator != NULL; iterator = iterator->next)
-	{
-		print_func(iterator->data);
-	}
+	ll_print(list->next, print_func);
+	print_func(list->data);
 
 	return 0;
 }
