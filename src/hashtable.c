@@ -18,12 +18,12 @@ HashTable *ht_create(uint32_t n)
 	return tmp;
 }
 
-uint32_t ht_free(HashTable *ht) {
+uint32_t ht_free(HashTable *ht)
+{
 	for (uint32_t i = 0; i < ht->num_buckets; i++)
-	{
 		ll_free(ht->buckets[i]);
-	}
 	free(ht);
+
 	return 0;
 }
 
@@ -67,17 +67,18 @@ void *ht_retrieve(HashTable *ht, char *key)
 	return item;
 }
 
-uint32_t ht_insert(HashTable **ht, char *key, uint32_t value)
+uint32_t ht_insert(HashTable **ht, void *data)
 {
-	if (key == NULL)
-		return 1;
+	uint32_t hash_value;
 
-	MyData *tmp = calloc(1, sizeof(*tmp));
-	tmp->key = key;
-	tmp->data = value;
+	struct KeyStruct
+	{
+		char *key;
+	};
+	struct KeyStruct *key_data = (struct KeyStruct *) data;
 	
-	uint32_t hash_value = ht_hash_ascii(*ht, key);
-	ll_add(&((*ht)->buckets[hash_value]), tmp);
+	hash_value = ht_hash_ascii(*ht, key_data->key);
+	ll_add(&((*ht)->buckets[hash_value]), data);
 
 	return 0;
 }

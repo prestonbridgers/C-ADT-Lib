@@ -1,2 +1,2 @@
-a.out
-push_doc.sh
+./src/a.out
+./push_doc.sh
