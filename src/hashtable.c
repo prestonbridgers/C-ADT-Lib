@@ -6,6 +6,10 @@
 #include "linked_list.h"
 #include "hashtable.h"
 
+/*
+ * Allocates memory for and returns a pointer to a hashtable
+ *   with n buckets.
+*/
 HashTable *ht_create(uint32_t n)
 {
 	HashTable *tmp = calloc(1, sizeof(*tmp));
@@ -18,6 +22,9 @@ HashTable *ht_create(uint32_t n)
 	return tmp;
 }
 
+/*
+ * Frees all memory associated with hashtable, ht.
+*/
 uint32_t ht_free(HashTable *ht)
 {
 	for (uint32_t i = 0; i < ht->num_buckets; i++)
@@ -28,6 +35,11 @@ uint32_t ht_free(HashTable *ht)
 	return 0;
 }
 
+/*
+ * Private hash function that folds the ASCII
+ *   codes of a key and returns it mod the number
+ *   of buckets in hashtable, ht.
+*/
 uint32_t ht_hash_ascii(HashTable *ht, char *key)
 {
 	uint32_t hash = 0;
@@ -37,6 +49,14 @@ uint32_t ht_hash_ascii(HashTable *ht, char *key)
 	return index;
 }
 
+/*
+ * Private compare functions that compares keys of
+ *   two void pointers.
+ *
+ * Pre-conditions:
+ *   The first piece of data stored at a and b must
+ *     be character strings.
+*/
 int ht_cmpr_private(void *a, void *b)
 {
 	struct tmp_struct
@@ -53,6 +73,10 @@ int ht_cmpr_private(void *a, void *b)
 	return 1;
 }
 
+/*
+ * Searches hashtable for and returns data from
+ *   (key, data) pair.
+*/
 void *ht_retrieve(HashTable *ht, char *key)
 {
 	uint32_t index = ht_hash_ascii(ht, key);
@@ -68,6 +92,9 @@ void *ht_retrieve(HashTable *ht, char *key)
 	return item;
 }
 
+/*
+ * Inserts data into hashtable, ht.
+*/
 uint32_t ht_insert(HashTable **ht, void *data)
 {
 	uint32_t hash_value;
@@ -84,6 +111,9 @@ uint32_t ht_insert(HashTable **ht, void *data)
 	return 0;
 }
 
+/*
+ * Prints the hashtable using print_func
+*/
 uint32_t ht_print(HashTable *ht, void(*print_func)(void *))
 {
 	if(ht == NULL)

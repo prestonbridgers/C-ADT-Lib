@@ -1,15 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+
 #include "linked_list.h"
 
+/*
+ * Creates a new node and adds it to the end of the list.
+*/
 int ll_addEnd(List **list, void *filled_data)
 {
 	// The case that the list is currently empty
 	if (*list == NULL)
-	{ *list = calloc(1, sizeof(List));
+	{
+		*list = calloc(1, sizeof(List));
 		(*list)->data = filled_data;
 		(*list)->next = NULL;
-	} else // The case that the list is not empty
+	}
+	// The case that the list is not empty
+	else
 	{
 		List *tail = NULL;
 		ll_tail_get(&tail, *list);
@@ -22,6 +30,10 @@ int ll_addEnd(List **list, void *filled_data)
 	return 0;
 }
 
+/*
+ * Searches for and returns a pointer to target element
+ *   if it's in the list.
+*/
 void *ll_get(List *list, int(*cmpr_func)(void *, void *), void *target)
 {
 	List *iter = list;
@@ -41,6 +53,9 @@ void *ll_get(List *list, int(*cmpr_func)(void *, void *), void *target)
 	return NULL;
 }
 
+/*
+ * Frees all memory associated with the linked list.
+*/
 int ll_free(List *list)
 {
 	if (list == NULL)
@@ -58,6 +73,9 @@ int ll_free(List *list)
 	return 0;
 }
 
+/*
+ * Finds and returns the tail of the list.
+*/
 int ll_tail_get(List **tail, List *list)
 {
 	if (list == NULL)
@@ -111,7 +129,8 @@ int ll_add(List **list, void *filled_data)
 		(*list)->data = filled_data;
 		(*list)->next = NULL;
 	}
-	else // The case that the list is not empty
+	// The case that the list is not empty
+	else
 	{
 		List *new_tmp = calloc(1, sizeof(List));
 		new_tmp->data = filled_data;
@@ -122,19 +141,23 @@ int ll_add(List **list, void *filled_data)
 	return 0;
 }
 
-int ll_remove(List **list, int(*remove_func)(void *, void *), void *target)
+/*
+ * Searches for the target element in the list using cmpr_func
+ *   and removes it.
+*/
+int ll_remove(List **list, int(*cmpr_func)(void *, void *), void *target)
 {
 	List *prev = NULL;
 	List *iter = *list;
+	uint8_t is_found_target = 0;
 
-	for(;; iter = iter->next)
+	while(!is_found_target)
 	{
 		if(iter == NULL)
-		{
-			break;
-		}
+			is_found_target = 1;
 
-		if (remove_func(iter->data, target) == 0)
+		// If the target is found
+		if (cmpr_func(iter->data, target) == 0)
 		{
 			// The case that the target is at the beginning
 			if (prev == NULL)
@@ -144,17 +167,21 @@ int ll_remove(List **list, int(*remove_func)(void *, void *), void *target)
 				free(tmp->data);
 				free(tmp);
 			}
+			// All other cases
 			else
 			{
 				prev->next = iter->next;
 				free(iter->data);
 				free(iter);
 			}
-			break;
+
+			
+			is_found_target = 1;
 		}
 		else
 		{
 			prev = iter;
+			iter = iter->next;
 		}
 	}
 

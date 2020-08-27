@@ -14,10 +14,19 @@ typedef struct HashTable{
 	List **buckets;
 }HashTable;
 
-HashTable *ht_create(uint32_t n); /* Creates a hashtable with n buckets */
-uint32_t ht_free(HashTable *ht); /* Frees all memory associated with ht */
-uint32_t ht_insert(HashTable **ht, void *data); /* Inserts data into ht */
-uint32_t ht_print(HashTable *ht, void(*print_func)(void *)); /* Prints ht using print_func */
-void *ht_retrieve(HashTable *ht, char *key); /* Retrieves key data from ht */
+/* Creates a hashtable with n buckets */
+HashTable *ht_create(uint32_t n);
+
+/* Frees all memory associated with ht */
+uint32_t ht_free(HashTable *ht);
+
+/* Inserts data into ht */
+uint32_t ht_insert(HashTable **ht, void *data);
+
+/* Prints ht using print_func */
+uint32_t ht_print(HashTable *ht, void(*print_func)(void *));
+
+/* Retrieves key data from ht */
+void *ht_retrieve(HashTable *ht, char *key);
 
 #endif
