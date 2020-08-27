@@ -22,6 +22,7 @@ uint32_t ht_free(HashTable *ht)
 {
 	for (uint32_t i = 0; i < ht->num_buckets; i++)
 		ll_free(ht->buckets[i]);
+	free(ht->buckets);
 	free(ht);
 
 	return 0;
