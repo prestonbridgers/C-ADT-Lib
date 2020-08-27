@@ -1,6 +1,17 @@
-ll: ll_main.c linked_list.c
-	gcc linked_list.c ll_main.c
+CC = gcc
+CFLAGS = -c -g -Wall -std=c99 -I $(INC)
+OBJ = linked_list.o hashtable.o main.o
+INC = ../include
 
-ht: ht_main.c hashtable.c linked_list.c
-	gcc hashtable.c linked_list.c ht_main.c
+.c.o:
+	$(CC) $(CFLAGS) $<
 
+adt_lib: $(OBJ)
+	$(CC) $^ -o $@
+
+linked_list.o: $(INC)/linked_list.h
+hashtable.o: $(INC)/hashtable.h
+main.o: $(INC)/hashtable.h $(INC)/linked_list.h
+
+clean:
+	rm -f *.o

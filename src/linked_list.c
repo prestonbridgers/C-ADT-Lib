@@ -91,6 +91,8 @@ int ll_print(List *list, void(*print_func)(void *))
 	{
 		print_func(iterator->data);
 	}
+
+	return 0;
 }
 
 /* 

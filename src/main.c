@@ -1,11 +1,14 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
+#include "hashtable.h"
 #include "linked_list.h"
 
 /*
- * In this example, we create a linked list of these
- * PersonRecord structs.
+ * The data structure that will be used for both
+ *   the hashtable and linked list demos.
 */
 typedef struct{
 	char *name;
@@ -13,17 +16,29 @@ typedef struct{
 	int student_id;
 }PersonRecord;
 
-/*
- * The pr_create function is a simple helper function.
- *
- * The pr_print_func function is meant to be used as a
- * function pointer passed to the ll_print function.
-*/
+// Function prototypes
+int 			linkedlist_demo(void);
+int 			hashtable_demo(void);
 PersonRecord* 	pr_create(char *n, int a, int sid);
-void		pr_print_func(void *pr);
-int		pr_cmpr_func(void *a, void *b);
+void			pr_print_func(void *pr);
+int				pr_cmpr_func(void *a, void *b);
 
-int main(int argc, char **argv)
+// ~~~~~~~~~~~~~~~~~~~~~~Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+int main(void)
+{
+	printf("~~~~~~~~~~~~~~~~Hashtable Demo~~~~~~~~~~~~~~~~\n");
+	hashtable_demo();
+	printf("~~~~~~~~~~~~~~~Linked List Demo~~~~~~~~~~~~~~~\n");
+	linkedlist_demo();
+
+	return 0;
+}
+// ~~~~~~~~~~~~~~~~~~~End Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/*
+ * This function demonstrates the linked list interface.
+*/
+int linkedlist_demo(void)
 {
 	// The list MUST be initialized to NULL
 	List *pr_list = NULL;
@@ -58,11 +73,48 @@ int main(int argc, char **argv)
 	target.student_id = 1;
 
 	// Searching/getting the target created above from the list.
-	PersonRecord *pr = (PersonRecord *) ll_get(pr_list, &pr_cmpr_func, &target);
-	printf("Getting pr2 from the list: %s, %d\n", pr->name, pr->age);
+	void *pr = ll_get(pr_list, &pr_cmpr_func, &target);
+	printf("Getting pr2 from the list:\n");
+	pr_print_func(pr);
 
 	// Freeing all memory associated with the list
 	ll_free(pr_list);
+	return 0;
+}
+
+/*
+ * This function demonstrates the hashtable interface.
+*/
+int hashtable_demo(void)
+{
+	// Creating the hashtable with 10 buckets
+	HashTable *ht = ht_create(10);
+
+	// Creating my data
+	PersonRecord *pr1 = pr_create("Curt", 20, 0);
+	PersonRecord *pr2 = pr_create("Michael", 34, 1);
+	PersonRecord *pr3 = pr_create("John", 15, 2);
+
+	// Inserting data into the hashtable
+	ht_insert(&ht, pr1);
+	ht_insert(&ht, pr2);
+	ht_insert(&ht, pr3);
+
+	// Printing the hashtable
+	ht_print(ht, &pr_print_func);
+
+	// Retrieving the data
+	void *ret = ht_retrieve(ht, "Curt");
+	pr_print_func(ret);
+
+	ret = (PersonRecord *) ht_retrieve(ht, "Michael");
+	pr_print_func(ret);
+
+	ret = (PersonRecord *) ht_retrieve(ht, "John");
+	pr_print_func(ret);
+
+	// Freeing memory 
+	ht_free(ht);
 	return 0;
 }
 
@@ -80,7 +132,7 @@ PersonRecord *pr_create(char *n, int a, int sid)
 
 /*
  * Meant to be used as a function pointer to tell the
- * linked list how to print a PersonRecord.
+ *   datastructures how to print a PersonRecord struct.
 */
 void pr_print_func(void *pr)
 {
@@ -91,7 +143,7 @@ void pr_print_func(void *pr)
 
 /*
  * Meant to be used as a function pointer to tell the
- * linked list how to compare two PersonRecord structs.
+ *   datastructures how to compare two PersonRecord structs.
 */
 int pr_cmpr_func(void *a, void *b)
 {
