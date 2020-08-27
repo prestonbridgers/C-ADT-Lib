@@ -24,3 +24,5 @@ Planned ADT Implementations
 Stack
 
 Queue
+
+Binary Search Tree
