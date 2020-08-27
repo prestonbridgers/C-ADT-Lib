@@ -14,9 +14,9 @@ Singly Linked List
 	- Entirely generic
 
 Hash Tables
+	- Entirely generic
 	- Seperate Chaining (Linked List) collision resolution
 	- A simple character folding hash function
-	- Not entirely generic yet (Work in Progress)
 
 Planned ADT Implementations
 ---------------------------
