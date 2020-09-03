@@ -17,7 +17,7 @@ HashTable *ht_create(uint32_t n)
 	tmp->buckets = calloc(tmp->num_buckets, sizeof(*tmp->buckets));
 
 	for(uint32_t i = 0; i < tmp->num_buckets; i++)
-		tmp->buckets[i] = NULL;
+		tmp->buckets[i] = ll_create();
 
 	return tmp;
 }
@@ -28,7 +28,7 @@ HashTable *ht_create(uint32_t n)
 uint32_t ht_free(HashTable *ht)
 {
 	for (uint32_t i = 0; i < ht->num_buckets; i++)
-		ll_free(ht->buckets[i]);
+		ll_destroy(ht->buckets[i]);
 	free(ht->buckets);
 	free(ht);
 
@@ -106,7 +106,7 @@ uint32_t ht_insert(HashTable **ht, void *data)
 	struct KeyStruct *key_data = (struct KeyStruct *) data;
 	
 	hash_value = ht_hash_ascii(*ht, key_data->key);
-	ll_add(&((*ht)->buckets[hash_value]), data);
+	ll_add((*ht)->buckets[hash_value], data);
 
 	return 0;
 }
@@ -124,7 +124,6 @@ uint32_t ht_print(HashTable *ht, void(*print_func)(void *))
 	{
 		printf("Bucket #%d:\n", i);
 		ll_print(ht->buckets[i], print_func);
-		putc('\n', stdout);
 	}
 
 	return 0;

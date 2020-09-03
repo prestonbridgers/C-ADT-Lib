@@ -41,7 +41,7 @@ int main(void)
 int linkedlist_demo(void)
 {
 	// The list MUST be initialized to NULL
-	List *pr_list = NULL;
+	List *pr_list = ll_create();
 
 	// Creating our data
 	PersonRecord *pr1 = pr_create("John", 36, 0);
@@ -50,17 +50,17 @@ int linkedlist_demo(void)
 	PersonRecord *pr4 = pr_create("Sean", 22, 3);
 
 	// Adding our data to the list
-	ll_add(&pr_list, pr1);
-	ll_addEnd(&pr_list, pr2);
-	ll_add(&pr_list, pr3);
-	ll_addEnd(&pr_list, pr4);
+	ll_add(pr_list, pr1);
+	ll_add(pr_list, pr2);
+	ll_add(pr_list, pr3);
+	ll_add(pr_list, pr4);
 
 	/*
 	 * Removing pr1 from the list using the
 	 * PersonRecord comparison function we
 	 * created.
 	*/
-	ll_remove(&pr_list, &pr_cmpr_func, pr1);
+	ll_remove(pr_list, &pr_cmpr_func, pr1);
 
 	/*
 	 * Printing the contents of the list as defined
@@ -74,11 +74,15 @@ int linkedlist_demo(void)
 
 	// Searching/getting the target created above from the list.
 	void *pr = ll_get(pr_list, &pr_cmpr_func, &target);
-	printf("Getting pr2 from the list:\n");
+	printf("\nGetting pr2 from the list:\n");
 	pr_print_func(pr);
 
 	// Freeing all memory associated with the list
-	ll_free(pr_list);
+	ll_destroy(pr_list);
+	free(pr1);
+	free(pr2);
+	free(pr3);
+	free(pr4);
 	return 0;
 }
 
@@ -104,7 +108,8 @@ int hashtable_demo(void)
 	ht_print(ht, &pr_print_func);
 
 	// Retrieving the data
-	void *ret = ht_retrieve(ht, "Curt");
+	printf("\nRetrieving all data from the hashmap:\n");
+	PersonRecord *ret = (PersonRecord*) ht_retrieve(ht, "Curt");
 	pr_print_func(ret);
 
 	ret = (PersonRecord *) ht_retrieve(ht, "Michael");
@@ -115,6 +120,9 @@ int hashtable_demo(void)
 
 	// Freeing memory 
 	ht_free(ht);
+	free(pr1);
+	free(pr2);
+	free(pr3);
 	return 0;
 }
 
@@ -137,7 +145,7 @@ PersonRecord *pr_create(char *n, int a, int sid)
 void pr_print_func(void *pr)
 {
 	PersonRecord *pr_tmp = (PersonRecord *) pr;
-	printf("%s:\n  student ID: %d\n  age: %d\n\n",
+	printf("%s:\n  student ID: %d\n  age: %d\n",
 		pr_tmp->name, pr_tmp->student_id, pr_tmp->age);
 }
 
