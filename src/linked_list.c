@@ -34,12 +34,10 @@ List *ll_create()
 */
 int ll_destroy(List *list)
 {
-	if (list == NULL)
-		return 1;
-
 	ListNode *tmp;
 	ListNode *traverser;
 
+	// Traverse the list freeing all added ListNodes.
 	traverser = list->head->next;
 	while (traverser != list->tail)
 	{
@@ -47,7 +45,8 @@ int ll_destroy(List *list)
 		traverser = traverser->next;
 		free(tmp);
 	}
-	
+
+	// Free the rest
 	free(list->head);
 	free(list->tail);
 	free(list);
@@ -59,27 +58,35 @@ int ll_destroy(List *list)
 */
 int ll_add(List *list, void *filled_data)
 {
+	ListNode *new_node;
+
 	// The list is never empty thanks to the head dummy node.
-	ListNode *new_tmp = calloc(1, sizeof *new_tmp);
-	new_tmp->data = filled_data;
-	new_tmp->next = list->head->next;
-	list->head->next = new_tmp;
+	new_node = calloc(1, sizeof *new_node);
+	new_node->data = filled_data;
+
+	// Perform the add
+	new_node->next = list->head->next;
+	list->head->next = new_node;
 
 	return 0;
 }
 
 /*
  * Searches for the target element in the list using cmpr_func
- *   and removes it.
+ *   and removes it freeing appropriate memory.
 */
 int ll_remove(List *list, int(*cmpr_func)(void *, void *), void *target)
 {
-	ListNode *iter = list->head;
+	ListNode *iter;
+	ListNode *tmp;
 
+	// Move iter to the proper location in the list to remove target.
+	iter = list->head;
 	while (cmpr_func(iter->next->data, target) != 0)
 		iter = iter->next;
 
-	ListNode *tmp = iter->next;
+	// Perform the remove and free the memory.
+	tmp = iter->next;
 	iter->next = iter->next->next;
 	free(tmp);
 
@@ -92,11 +99,13 @@ int ll_remove(List *list, int(*cmpr_func)(void *, void *), void *target)
 */
 void *ll_get(List *list, int(*cmpr_func)(void *, void *), void *target)
 {
-	ListNode *iter = list->head->next;
+	ListNode *iter;
 
+	// Linear search for the target.
+	iter = list->head->next;
 	while (cmpr_func(iter->data, target) != 0)
 		iter = iter->next;
-	
+
 	return iter->data;
 }
 
@@ -108,8 +117,13 @@ int ll_print(List *list, void(*print_func)(void *))
 {
 	ListNode *traverser;
 
-	for (traverser = list->head->next; traverser != list->tail; traverser = traverser->next)
+	traverser = list->head->next;
+	while (traverser != list->tail)
+	{
 		print_func(traverser->data);
+		traverser = traverser->next;
+	}
+
 
 	return 0;
 }
