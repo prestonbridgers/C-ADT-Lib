@@ -14,13 +14,12 @@ The functions below are how you will interface with the code.
 
 .. code-block:: c
 
-	int ll_print(List *list, void(*print_func)(void *));
-	int ll_add(List **list, void *filled_data);
-	int ll_addEnd(List **list, void *filled_data);
-	int ll_tail_get(List **tail, List *list);
-	int ll_free(List *list);
-	int ll_remove(List **list, int(*remove_func)(void *, void *), void *target);
-	void *ll_get(List *list, int(*cmpr_func)(void *, void *), void *target);
+	List* ll_create();
+	int   ll_destroy(List *list);
+	int   ll_add(List *list, void *filled_data);
+	int   ll_remove(List *list, int(*remove_func)(void *, void *), void *target);
+	void* ll_get(List *list, int(*cmpr_func)(void *, void *), void *target);
+	int   ll_print(List *list, void(*print_func)(void *));
 
 Code Example
 ------------
@@ -44,20 +43,15 @@ The following example demonstrates a typical use case including the use of a cal
 		int student_id;
 	}PersonRecord;
 
-	/*
-	 * The pr_create function is a simple helper function.
-	 *
-	 * The pr_print_func function is meant to be used as a
-	 * function pointer passed to the ll_print function.
-	*/
-	PersonRecord* 	pr_create(char *n, int a, int sid);
+	/* Function Prototypes */
+	PersonRecord*	pr_create(char *n, int a, int sid);
 	void		pr_print_func(void *pr);
 	int		pr_cmpr_func(void *a, void *b);
 
 	int main(int argc, char **argv)
 	{
-		// The list MUST be initialized to NULL
-		List *pr_list = NULL;
+		// List initialization
+		List *pr_list = ll_create();
 
 		// Creating our data
 		PersonRecord *pr1 = pr_create("John", 36, 0);
@@ -66,34 +60,31 @@ The following example demonstrates a typical use case including the use of a cal
 		PersonRecord *pr4 = pr_create("Sean", 22, 3);
 
 		// Adding our data to the list
-		ll_add(&pr_list, pr1);
-		ll_addEnd(&pr_list, pr2);
-		ll_add(&pr_list, pr3);
-		ll_addEnd(&pr_list, pr4);
+		ll_add(pr_list, pr1);
+		ll_add(pr_list, pr2);
+		ll_add(pr_list, pr3);
+		ll_add(pr_list, pr4);
 
-		/*
-		 * Removing pr1 from the list using the
-		 * PersonRecord comparison function we
-		 * created.
-		*/
-		ll_remove(&pr_list, &pr_cmpr_func, pr1);
+		// Removing pr1 from our list
+		ll_remove(pr_list, &pr_cmpr_func, pr1);
 
-		/*
-		 * Printing the contents of the list as defined
-		 * by our pr_print_func
-		*/
+		// Printing the list
 		ll_print(pr_list, &pr_print_func);
 
 		// Creating a target to search for and get from the list.
 		PersonRecord target = (PersonRecord) {NULL, 0, 0};
 		target.student_id = 1;
 
-		// Searching/getting the target created above from the list.
+		// Getting the target created above from the list.
 		PersonRecord *pr = (PersonRecord *) ll_get(pr_list, &pr_cmpr_func, &target);
 		printf("Getting pr2 from the list: %s, %d\n", pr->name, pr->age);
 
-		// Freeing all memory associated with the list
-		ll_free(pr_list);
+		// Freeing all memory associated with the list and our data
+		ll_destroy(pr_list);
+		free(pr1);
+		free(pr2);
+		free(pr3);
+		free(pr4);
 		return 0;
 	}
 

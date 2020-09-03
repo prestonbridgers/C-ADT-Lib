@@ -52,13 +52,12 @@ For example, the <code class="docutils literal notranslate"><span class="pre">ll
 <h2>Headerfile<a class="headerlink" href="#headerfile" title="Permalink to this headline">¶</a></h2>
 <p>The header file is called <code class="docutils literal notranslate"><span class="pre">linked_list.h</span></code>.
 The functions below are how you will interface with the code.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">ll_print</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">print_func</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">));</span>
-<span class="kt">int</span> <span class="nf">ll_add</span><span class="p">(</span><span class="n">List</span> <span class="o">**</span><span class="n">list</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">filled_data</span><span class="p">);</span>
-<span class="kt">int</span> <span class="nf">ll_addEnd</span><span class="p">(</span><span class="n">List</span> <span class="o">**</span><span class="n">list</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">filled_data</span><span class="p">);</span>
-<span class="kt">int</span> <span class="nf">ll_tail_get</span><span class="p">(</span><span class="n">List</span> <span class="o">**</span><span class="n">tail</span><span class="p">,</span> <span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">);</span>
-<span class="kt">int</span> <span class="nf">ll_free</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">);</span>
-<span class="kt">int</span> <span class="nf">ll_remove</span><span class="p">(</span><span class="n">List</span> <span class="o">**</span><span class="n">list</span><span class="p">,</span> <span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="n">remove_func</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">),</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">);</span>
-<span class="kt">void</span> <span class="o">*</span><span class="nf">ll_get</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="n">cmpr_func</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">),</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">);</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">*</span> <span class="nf">ll_create</span><span class="p">();</span>
+<span class="kt">int</span>   <span class="nf">ll_destroy</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">);</span>
+<span class="kt">int</span>   <span class="nf">ll_add</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">filled_data</span><span class="p">);</span>
+<span class="kt">int</span>   <span class="nf">ll_remove</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="n">remove_func</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">),</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">);</span>
+<span class="kt">void</span><span class="o">*</span> <span class="nf">ll_get</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="n">cmpr_func</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">),</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">);</span>
+<span class="kt">int</span>   <span class="nf">ll_print</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">print_func</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">));</span>
 </pre></div>
 </div>
 </div>
@@ -80,20 +79,15 @@ The functions below are how you will interface with the code.</p>
         <span class="kt">int</span> <span class="n">student_id</span><span class="p">;</span>
 <span class="p">}</span><span class="n">PersonRecord</span><span class="p">;</span>
 
-<span class="cm">/*</span>
-<span class="cm"> * The pr_create function is a simple helper function.</span>
-<span class="cm"> *</span>
-<span class="cm"> * The pr_print_func function is meant to be used as a</span>
-<span class="cm"> * function pointer passed to the ll_print function.</span>
-<span class="cm">*/</span>
+<span class="cm">/* Function Prototypes */</span>
 <span class="n">PersonRecord</span><span class="o">*</span>   <span class="nf">pr_create</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sid</span><span class="p">);</span>
 <span class="kt">void</span>            <span class="nf">pr_print_func</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pr</span><span class="p">);</span>
 <span class="kt">int</span>             <span class="nf">pr_cmpr_func</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">b</span><span class="p">);</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
 <span class="p">{</span>
-        <span class="c1">// The list MUST be initialized to NULL</span>
-        <span class="n">List</span> <span class="o">*</span><span class="n">pr_list</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="c1">// List initialization</span>
+        <span class="n">List</span> <span class="o">*</span><span class="n">pr_list</span> <span class="o">=</span> <span class="n">ll_create</span><span class="p">();</span>
 
         <span class="c1">// Creating our data</span>
         <span class="n">PersonRecord</span> <span class="o">*</span><span class="n">pr1</span> <span class="o">=</span> <span class="n">pr_create</span><span class="p">(</span><span class="s">&quot;John&quot;</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
@@ -102,34 +96,31 @@ The functions below are how you will interface with the code.</p>
         <span class="n">PersonRecord</span> <span class="o">*</span><span class="n">pr4</span> <span class="o">=</span> <span class="n">pr_create</span><span class="p">(</span><span class="s">&quot;Sean&quot;</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
 
         <span class="c1">// Adding our data to the list</span>
-        <span class="n">ll_add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pr_list</span><span class="p">,</span> <span class="n">pr1</span><span class="p">);</span>
-        <span class="n">ll_addEnd</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pr_list</span><span class="p">,</span> <span class="n">pr2</span><span class="p">);</span>
-        <span class="n">ll_add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pr_list</span><span class="p">,</span> <span class="n">pr3</span><span class="p">);</span>
-        <span class="n">ll_addEnd</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pr_list</span><span class="p">,</span> <span class="n">pr4</span><span class="p">);</span>
+        <span class="n">ll_add</span><span class="p">(</span><span class="n">pr_list</span><span class="p">,</span> <span class="n">pr1</span><span class="p">);</span>
+        <span class="n">ll_add</span><span class="p">(</span><span class="n">pr_list</span><span class="p">,</span> <span class="n">pr2</span><span class="p">);</span>
+        <span class="n">ll_add</span><span class="p">(</span><span class="n">pr_list</span><span class="p">,</span> <span class="n">pr3</span><span class="p">);</span>
+        <span class="n">ll_add</span><span class="p">(</span><span class="n">pr_list</span><span class="p">,</span> <span class="n">pr4</span><span class="p">);</span>
 
-        <span class="cm">/*</span>
-<span class="cm">         * Removing pr1 from the list using the</span>
-<span class="cm">         * PersonRecord comparison function we</span>
-<span class="cm">         * created.</span>
-<span class="cm">        */</span>
-        <span class="n">ll_remove</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pr_list</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pr_cmpr_func</span><span class="p">,</span> <span class="n">pr1</span><span class="p">);</span>
+        <span class="c1">// Removing pr1 from our list</span>
+        <span class="n">ll_remove</span><span class="p">(</span><span class="n">pr_list</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pr_cmpr_func</span><span class="p">,</span> <span class="n">pr1</span><span class="p">);</span>
 
-        <span class="cm">/*</span>
-<span class="cm">         * Printing the contents of the list as defined</span>
-<span class="cm">         * by our pr_print_func</span>
-<span class="cm">        */</span>
+        <span class="c1">// Printing the list</span>
         <span class="n">ll_print</span><span class="p">(</span><span class="n">pr_list</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pr_print_func</span><span class="p">);</span>
 
         <span class="c1">// Creating a target to search for and get from the list.</span>
         <span class="n">PersonRecord</span> <span class="n">target</span> <span class="o">=</span> <span class="p">(</span><span class="n">PersonRecord</span><span class="p">)</span> <span class="p">{</span><span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
         <span class="n">target</span><span class="p">.</span><span class="n">student_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
-        <span class="c1">// Searching/getting the target created above from the list.</span>
+        <span class="c1">// Getting the target created above from the list.</span>
         <span class="n">PersonRecord</span> <span class="o">*</span><span class="n">pr</span> <span class="o">=</span> <span class="p">(</span><span class="n">PersonRecord</span> <span class="o">*</span><span class="p">)</span> <span class="n">ll_get</span><span class="p">(</span><span class="n">pr_list</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pr_cmpr_func</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">target</span><span class="p">);</span>
         <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Getting pr2 from the list: %s, %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pr</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">pr</span><span class="o">-&gt;</span><span class="n">age</span><span class="p">);</span>
 
-        <span class="c1">// Freeing all memory associated with the list</span>
-        <span class="n">ll_free</span><span class="p">(</span><span class="n">pr_list</span><span class="p">);</span>
+        <span class="c1">// Freeing all memory associated with the list and our data</span>
+        <span class="n">ll_destroy</span><span class="p">(</span><span class="n">pr_list</span><span class="p">);</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">pr1</span><span class="p">);</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">pr2</span><span class="p">);</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">pr3</span><span class="p">);</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">pr4</span><span class="p">);</span>
         <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 
