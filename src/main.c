@@ -5,6 +5,7 @@
 
 #include "hashtable.h"
 #include "linked_list.h"
+#include "stack.h"
 
 /*
  * The data structure that will be used for both
@@ -19,6 +20,7 @@ typedef struct{
 // Function prototypes
 int 			linkedlist_demo(void);
 int 			hashtable_demo(void);
+int             stack_demo(void);
 PersonRecord* 	pr_create(char *n, int a, int sid);
 void			pr_print_func(void *pr);
 int				pr_cmpr_func(void *a, void *b);
@@ -30,6 +32,8 @@ int main(void)
 	hashtable_demo();
 	printf("~~~~~~~~~~~~~~~Linked List Demo~~~~~~~~~~~~~~~\n");
 	linkedlist_demo();
+	printf("~~~~~~~~~~~~~~~Stack Demo~~~~~~~~~~~~~~~\n");
+	stack_demo();
 
 	return 0;
 }
@@ -123,6 +127,46 @@ int hashtable_demo(void)
 	free(pr1);
 	free(pr2);
 	free(pr3);
+	return 0;
+}
+
+int stack_demo()
+{
+	Stack *st = stack_create();
+
+	typedef struct
+	{
+		char *name;
+		int age;
+	} Person;
+
+	Person a = (Person) {"Curt", 18};
+	Person b = (Person) {"James", 20};
+	Person c = (Person) {"John", 25};
+
+	stack_push(st, &a);
+
+	Person *get_a = (Person *) stack_pop(st);
+	printf("Popped: %s is %d years old.\n", get_a->name, get_a->age);
+
+	get_a = (Person *) stack_pop(st);
+	if (get_a == NULL)
+		printf("Popped: End of stack reached\n\n");
+	
+	stack_push(st, &b);
+	stack_push(st, &c);
+
+	get_a = (Person *) stack_pop(st);
+	printf("Popped: %s is %d years old.\n", get_a->name, get_a->age);
+
+	get_a = (Person *) stack_pop(st);
+	printf("Popped: %s is %d years old.\n", get_a->name, get_a->age);
+
+	get_a = (Person *) stack_pop(st);
+	if (get_a == NULL)
+		printf("Popped: End of stack reached\n");
+
+	stack_destroy(st);
 	return 0;
 }
 
