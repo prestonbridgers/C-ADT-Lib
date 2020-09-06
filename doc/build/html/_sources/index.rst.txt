@@ -12,3 +12,4 @@ C Data Structure Library Docs
 
 	linked_list
 	hash_table
+	stack
