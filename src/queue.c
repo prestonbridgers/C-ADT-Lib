@@ -20,22 +20,43 @@ Queue *queue_create()
 
 void queue_destroy(Queue *q)
 {
-	
+	// TODO: Make this do something
+	free(q);
 }
 
 void queue_en(Queue *q, void *data)
 {
-	if (q->data[q->end] == NULL)
+	// IF: the queue is full
+	if (q->num_elements == q->capacity)
 	{
-		q->data[q->end] = data;
-		q->end++;
+		fprintf(stderr, "Attempted to enqueue on a full array!\n");
+		return;
 	}
+
+	q->data[q->end] = data;
+	q->end++;
+	q->num_elements++;
+
+	if (q->end == q->capacity)
+		q->end = 0;
 }
 
 void *queue_de(Queue *q)
 {
+	// IF: Queue is empty
+	if (q->num_elements == 0)
+	{
+		fprintf(stderr, "Attempted to dequeue from an empty array!\n");
+		return NULL;
+	}
+
 	void *data = q->data[q->start];
 	q->start++;
+	q->num_elements--;
+
+	if (q->start == q->capacity)
+		q->start = 0;
+	
 	return data;
 }
 
@@ -47,29 +68,19 @@ int main(void)
 		int age;
 	}Person;
 
+	Person *g;
 	Queue *que = queue_create();
-
-	for (int i = 0; i < que->capacity; i++)
-		if (que->data[i] == NULL)
-			printf("Queue #%d: NULL\n", i);
 
 	Person p1 = (Person) {"Curt", 18};
 	Person p2 = (Person) {"James", 20};
 	Person p3 = (Person) {"Kassy", 25};
 	
 	queue_en(que, &p1);
-	queue_en(que, &p2);
-	queue_en(que, &p3);
-
-	Person *g = (Person*) queue_de(que);
-	printf("g: %s is %d years old\n", g->name, g->age);
 
 	g = (Person*) queue_de(que);
-	printf("g: %s is %d years old\n", g->name, g->age);
+	if (g != NULL)
+		printf("g: %s is %d years old\n", g->name, g->age);
 
-	g = (Person*) queue_de(que);
-	printf("g: %s is %d years old\n", g->name, g->age);
-	
 	queue_destroy(que);
 	return 0;
 }
