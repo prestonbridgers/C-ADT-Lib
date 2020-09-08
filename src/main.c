@@ -186,8 +186,6 @@ int queue_demo()
 	Queue *que = queue_create();
 
 	Person p1 = (Person) {"Curt", 18};
-	Person p2 = (Person) {"James", 20};
-	Person p3 = (Person) {"Kassy", 25};
 	
 	queue_en(que, &p1);
 
