@@ -59,28 +59,3 @@ void *queue_de(Queue *q)
 	
 	return data;
 }
-
-int main(void)
-{
-	typedef struct
-	{
-		char *name;
-		int age;
-	}Person;
-
-	Person *g;
-	Queue *que = queue_create();
-
-	Person p1 = (Person) {"Curt", 18};
-	Person p2 = (Person) {"James", 20};
-	Person p3 = (Person) {"Kassy", 25};
-	
-	queue_en(que, &p1);
-
-	g = (Person*) queue_de(que);
-	if (g != NULL)
-		printf("g: %s is %d years old\n", g->name, g->age);
-
-	queue_destroy(que);
-	return 0;
-}

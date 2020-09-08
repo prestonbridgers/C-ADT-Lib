@@ -6,6 +6,7 @@
 #include "hashtable.h"
 #include "linked_list.h"
 #include "stack.h"
+#include "queue.h"
 
 /*
  * The data structure that will be used for both
@@ -21,6 +22,7 @@ typedef struct{
 int 			linkedlist_demo(void);
 int 			hashtable_demo(void);
 int             stack_demo(void);
+int				queue_demo(void);
 PersonRecord* 	pr_create(char *n, int a, int sid);
 void			pr_print_func(void *pr);
 int				pr_cmpr_func(void *a, void *b);
@@ -34,6 +36,8 @@ int main(void)
 	linkedlist_demo();
 	printf("~~~~~~~~~~~~~~~Stack Demo~~~~~~~~~~~~~~~\n");
 	stack_demo();
+	printf("~~~~~~~~~~~~~~~Queue Demo~~~~~~~~~~~~~~~\n");
+	queue_demo();
 
 	return 0;
 }
@@ -167,6 +171,31 @@ int stack_demo()
 		printf("Popped: End of stack reached\n");
 
 	stack_destroy(st);
+	return 0;
+}
+
+int queue_demo()
+{
+	typedef struct
+	{
+		char *name;
+		int age;
+	}Person;
+
+	Person *g;
+	Queue *que = queue_create();
+
+	Person p1 = (Person) {"Curt", 18};
+	Person p2 = (Person) {"James", 20};
+	Person p3 = (Person) {"Kassy", 25};
+	
+	queue_en(que, &p1);
+
+	g = (Person*) queue_de(que);
+	if (g != NULL)
+		printf("g: %s is %d years old\n", g->name, g->age);
+
+	queue_destroy(que);
 	return 0;
 }
 
