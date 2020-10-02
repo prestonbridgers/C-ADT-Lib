@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -c -g -Wall -std=c99 -I $(INC)
 OBJ = linked_list.o hashtable.o stack.o queue.o main.o
 INC = ../include
-
+	
 .c.o:
 	$(CC) $(CFLAGS) $<
 
@@ -17,7 +17,6 @@ hashtable.o: $(INC)/hashtable.h
 stack.o: $(INC)/stack.h $(INC)/linked_list.h
 queue.o: $(INC)/queue.h
 main.o: $(INC)/hashtable.h $(INC)/linked_list.h $(INC)/stack.h $(INC)/queue.h
-
 
 clean:
 	rm -f *.o
