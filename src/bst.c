@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct BinarySearchTree{
 	int data;
@@ -8,25 +9,41 @@ typedef struct BinarySearchTree{
 }BinarySearchTree;
 
 int bst_add(BinarySearchTree **tree, int val);
+int bst_destroy(BinarySearchTree *tree);
 int bst_print(BinarySearchTree *tree);
 	
 int main(void)
 {
 	BinarySearchTree *bst = NULL;
 
-	printf("Adding a number to an empty list\n");
-	bst_add(&bst, 9);
-	bst_add(&bst, 10);
-	bst_add(&bst, 3);
-	bst_add(&bst, 17);
-	bst_add(&bst, 8);
-	bst_add(&bst, 15);
+    srand(time(NULL));
 
-	printf("Printing the list\n");
+    for (int i = 0; i < 100; i++)
+    {
+        int n = rand() % 1000;
+	    bst_add(&bst, n);
+    }
+
+	printf("Printing the tree\n");
 	bst_print(bst);
 	printf("\n");
 
+    printf("Destroying the tree\n");
+    bst_destroy(bst);
 	return 0;
+}
+
+int bst_destroy(BinarySearchTree *tree)
+{
+    if (tree == NULL)
+        return 1;
+
+    bst_destroy(tree->left);
+    bst_destroy(tree->right);
+
+    free(tree);
+
+    return 0;
 }
 
 int bst_add(BinarySearchTree **tree, int val)
