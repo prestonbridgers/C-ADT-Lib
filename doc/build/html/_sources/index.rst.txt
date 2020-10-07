@@ -14,3 +14,4 @@ C Data Structure Library Docs
 	hash_table
 	stack
 	queue
+	bst
