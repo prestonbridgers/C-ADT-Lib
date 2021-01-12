@@ -1,39 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "bst.h"
 
-typedef struct BinarySearchTree{
-	int data;
-	struct BinarySearchTree *left;
-	struct BinarySearchTree *right;
-}BinarySearchTree;
-
-int bst_add(BinarySearchTree **tree, int val);
-int bst_destroy(BinarySearchTree *tree);
-int bst_print(BinarySearchTree *tree);
-	
-int main(void)
-{
-	BinarySearchTree *bst = NULL;
-
-    srand(time(NULL));
-
-    for (int i = 0; i < 100; i++)
-    {
-        int n = rand() % 1000;
-	    bst_add(&bst, n);
-    }
-
-	printf("Printing the tree\n");
-	bst_print(bst);
-	printf("\n");
-
-    printf("Destroying the tree\n");
-    bst_destroy(bst);
-	return 0;
-}
-
-int bst_destroy(BinarySearchTree *tree)
+int bst_destroy(BST *tree)
 {
     if (tree == NULL)
         return 1;
@@ -46,33 +16,47 @@ int bst_destroy(BinarySearchTree *tree)
     return 0;
 }
 
-int bst_add(BinarySearchTree **tree, int val)
+int bst_insert(BST **tree, int val)
 {
     if (*tree == NULL)
     {
-        BinarySearchTree *tmp = calloc(1, sizeof(*tmp));
+        BST *tmp = calloc(1, sizeof(*tmp));
         tmp->data = val;
         tmp->left = NULL;
         tmp->right = NULL;
         *tree = tmp;
-        return 0;
+        return 1;
     }
 
     if (val < (*tree)->data)
-        bst_add(&(*tree)->left, val);
+        bst_insert(&(*tree)->left, val);
     else
-        bst_add(&(*tree)->right, val);
+        bst_insert(&(*tree)->right, val);
+    return 0;
 }
 
-int bst_print(BinarySearchTree *tree)
+int bst_min(BST *tree)
+{
+    if (tree->left == NULL)
+        return tree->data;
+    return bst_min(tree->left);
+}
+
+int bst_max(BST *tree)
+{
+    if (tree->right == NULL)
+        return tree->data;
+    return bst_max(tree->right);
+}
+
+int bst_print(BST *tree)
 {
     if (tree == NULL)
         return 1;
 
-	bst_print(tree->left);
-	printf("%d ", tree->data);
-	bst_print(tree->right);
-
+    bst_print(tree->left);
+    printf("%d ", tree->data);
+    bst_print(tree->right);
 
     return 0;
 }

@@ -2,12 +2,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "hashtable.h"
 #include "linked_list.h"
 #include "stack.h"
 #include "queue.h"
-
+#include "bst.h" 
 /*
  * The data structure that will be used for both
  *   the hashtable and linked list demos.
@@ -23,6 +24,7 @@ int 			linkedlist_demo(void);
 int 			hashtable_demo(void);
 int             stack_demo(void);
 int				queue_demo(void);
+int             bst_demo(void);
 PersonRecord* 	pr_create(char *n, int a, int sid);
 void			pr_print_func(void *pr);
 int				pr_cmpr_func(void *a, void *b);
@@ -30,14 +32,16 @@ int				pr_cmpr_func(void *a, void *b);
 // ~~~~~~~~~~~~~~~~~~~~~~Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int main(void)
 {
-	printf("~~~~~~~~~~~~~~~~Hashtable Demo~~~~~~~~~~~~~~~~\n");
+	printf("~~~~~~~~~~~~~~~Hashtable Demo~~~~~~~~~~~~~~~~\n");
 	hashtable_demo();
-	printf("~~~~~~~~~~~~~~~Linked List Demo~~~~~~~~~~~~~~~\n");
+	printf("~~~~~~~~~~~~~~~Linked List Demo~~~~~~~~~~~~~~\n");
 	linkedlist_demo();
-	printf("~~~~~~~~~~~~~~~Stack Demo~~~~~~~~~~~~~~~\n");
+	printf("~~~~~~~~~~~~~~~Stack Demo~~~~~~~~~~~~~~~~~~~~\n");
 	stack_demo();
-	printf("~~~~~~~~~~~~~~~Queue Demo~~~~~~~~~~~~~~~\n");
+	printf("~~~~~~~~~~~~~~~Queue Demo~~~~~~~~~~~~~~~~~~~~\n");
 	queue_demo();
+	printf("~~~~~~~~~~~~~~~BST Demo~~~~~~~~~~~~~~~~~~~~~~\n");
+    bst_demo();
 
 	return 0;
 }
@@ -195,6 +199,30 @@ int queue_demo()
 
 	queue_destroy(que);
 	return 0;
+}
+
+int bst_demo()
+{
+	BST *bst = NULL;
+
+    srand(time(NULL));
+
+    for (int i = 0; i < 10; i++)
+    {
+        int n = rand() % 1000;
+	    bst_insert(&bst, n);
+    }
+
+    printf("Min: %d\n", bst_min(bst));
+    printf("Max: %d\n", bst_max(bst));
+
+	printf("Printing the tree\n");
+	bst_print(bst);
+	printf("\n");
+
+    printf("Destroying the tree\n");
+    bst_destroy(bst);
+    return 0;
 }
 
 /*
